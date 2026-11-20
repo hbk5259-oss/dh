@@ -166,6 +166,11 @@
                         스마트관광·지도
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-donghae-blue transition-all group-hover:w-full"></span>
                     </a>
+                    <a href="#localFoodShortsSection" class="hover:text-donghae-blue transition-colors py-2 relative group flex items-center gap-1">
+                        <i class="fab fa-youtube text-rose-600 text-xs"></i>
+                        현지인맛집쇼츠
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-donghae-blue transition-all group-hover:w-full"></span>
+                    </a>
                     <a href="#cctvSection" class="hover:text-donghae-blue transition-colors py-2 relative group flex items-center gap-1">
                         <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
                         관광지CCTV
@@ -209,6 +214,7 @@
             <a href="#services" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">시민서비스</a>
             <a href="#dashboard" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트현황판</a>
             <a href="#tourism" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트관광·지도</a>
+            <a href="#localFoodShortsSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">🎬 동해 현지인 맛집 쇼츠</a>
             <a href="#cctvSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">🔴 관광지 실시간 CCTV</a>
             <a href="#notices" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">시정소식</a>
             <a href="#transport" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트교통</a>
@@ -584,6 +590,104 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2.5: DONGHAE LOCAL FOOD RANDOM SHORTS (동해시 현지인 맛집 랜덤 쇼츠) -->
+    <section id="localFoodShortsSection" class="py-16 px-4 max-w-7xl mx-auto scroll-mt-20">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-100">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-600 border border-rose-200 text-[11px] font-extrabold px-3 py-1 rounded-full mb-2">
+                        <i class="fab fa-youtube"></i>
+                        <span>LOCAL FOOD SHORTS · 랜덤 맛집 큐레이션</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">동해시 현지인 맛집 랜덤 쇼츠</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                        접속할 때마다 동해·묵호 현지인 추천 맛집 쇼츠가 랜덤으로 자동 선별되며, 버튼으로 다른 쇼츠를 즉시 뽑아볼 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                    <button type="button" onclick="renderRandomFoodShort(true)" class="bg-donghae-blue hover:bg-donghae-deep text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-donghae-blue/20 transition flex items-center gap-2">
+                        <i class="fas fa-shuffle text-donghae-sky"></i>
+                        <span>다른 현지인 맛집 쇼츠 뽑기</span>
+                    </button>
+                    <a id="shortYoutubeDirectLink" href="https://www.youtube.com/shorts/YOloMMNu2JA" target="_blank" rel="noopener noreferrer" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fab fa-youtube text-rose-600"></i>
+                        <span>YouTube 앱에서 보기</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-6 grid lg:grid-cols-12 gap-8 items-center">
+                <!-- Left: 9:16 Vertical Shorts Player -->
+                <div class="lg:col-span-5 flex flex-col items-center">
+                    <div class="w-full max-w-[320px] aspect-[9/16] rounded-3xl overflow-hidden bg-slate-950 shadow-2xl border-4 border-slate-900 relative">
+                        <iframe
+                            id="donghaeFoodShortIframe"
+                            src=""
+                            title="동해시 현지인 맛집 쇼츠"
+                            class="w-full h-full border-0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen
+                        ></iframe>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-2.5 text-center">
+                        ※ 브라우저 정책상 최초 로딩 시 음소거(Mute) 상태로 준비되며, 플레이어 하단 스피커 아이콘으로 소리를 켤 수 있습니다.
+                    </p>
+                </div>
+
+                <!-- Right: Selected Short Guide & Direct Actions -->
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="bg-slate-50 rounded-2xl p-5 sm:p-6 border border-slate-200/80 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span id="shortAreaBadge" class="bg-donghae-teal/15 text-donghae-teal text-xs font-extrabold px-3 py-1 rounded-full">
+                                묵호 · 발한동 권역
+                            </span>
+                            <span id="shortCounterBadge" class="text-xs font-mono font-bold text-slate-400">
+                                1 / 5
+                            </span>
+                        </div>
+
+                        <div>
+                            <h3 id="shortTitleText" class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">
+                                묵호 여행, 절대 실패 없는 현지인 찐맛집 8곳
+                            </h3>
+                            <p id="shortDescText" class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                                발한동 메밀전·전병과 묵호진동 물회·회덮밥 등 현지인이 자주 찾는 동해 맛집 코스를 짧은 쇼츠로 확인하세요.
+                            </p>
+                        </div>
+
+                        <div id="shortMenuTags" class="flex flex-wrap gap-1.5">
+                            <!-- JS populated menu tags -->
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-200/70 flex flex-wrap gap-2.5">
+                            <a id="shortNaverMapBtn" href="#" target="_blank" rel="noopener noreferrer" class="bg-[#03c75a] hover:bg-[#02b350] text-white px-4 py-2.5 rounded-xl text-xs font-extrabold shadow-sm transition flex items-center gap-1.5">
+                                <span class="font-black">N</span>
+                                <span>네이버 지도에서 맛집 검색</span>
+                                <i class="fas fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                            <button type="button" id="shortFocusSpotBtn" onclick="focusRelatedShortSpot()" class="bg-white hover:bg-sky-50 text-donghae-blue border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fas fa-map-location-dot"></i>
+                                <span>인근 관광명소 지도 보기</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Playlist Thumbnails / Selector Pills -->
+                    <div>
+                        <div class="text-xs font-bold text-slate-500 mb-2 flex items-center justify-between">
+                            <span><i class="fas fa-list-ul text-donghae-blue mr-1.5"></i>큐레이션 쇼츠 목록 (직접 선택 가능)</span>
+                            <span class="text-[11px] text-slate-400">클릭 시 즉시 전환</span>
+                        </div>
+                        <div id="shortPlaylistPills" class="grid sm:grid-cols-2 gap-2">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1292,6 +1396,7 @@
             startClock();
             initTourMap();
             renderTourSpots('all');
+            initFoodShorts();
             initCctvViewer();
             switchNoticeTab('news');
             updateBusInfo();
@@ -1605,6 +1710,133 @@
             handleHeroSearch();
         }
 
+
+        // --- 2-0. DONGHAE LOCAL FOOD RANDOM SHORTS ---
+        const donghaeFoodShorts = [
+            {
+                id: "YOloMMNu2JA",
+                area: "묵호 · 발한동 권역",
+                title: "묵호 여행, 절대 실패 없는 현지인 찐맛집 8곳",
+                desc: "발한동 메밀전·전병과 묵호진동 물회·회덮밥 등 현지인이 추천하는 동해 맛집 코스를 빠르게 살펴보는 쇼츠입니다.",
+                tags: ["#묵호항맛집", "#메밀전병", "#물회·회덮밥", "#현지인추천"],
+                mapQuery: "동해시 묵호항 현지인 맛집",
+                relatedSpotId: 10
+            },
+            {
+                id: "UlzZxAIJn3w",
+                area: "묵호 · 해안권역",
+                title: "동해 현지인만 안다는 가성비 생선집",
+                desc: "묵호 일대 신선한 생선구이와 모듬 생선요리를 합리적인 가격에 즐길 수 있는 현지 식당 소개 쇼츠입니다.",
+                tags: ["#동해생선구이", "#가성비맛집", "#묵호식당"],
+                mapQuery: "동해시 묵호 생선구이 맛집",
+                relatedSpotId: 10
+            },
+            {
+                id: "WIDePPoKJQw",
+                area: "발한복개 · 묵호항",
+                title: "동해 현지인들이 추천한 동해맛집 모음",
+                desc: "묵호항 인근 얼큰한 장칼국수와 현지 식사 메뉴를 한눈에 모아보는 동해 맛집 하이라이트 쇼츠입니다.",
+                tags: ["#동해장칼국수", "#오뚜기칼국수", "#발한동맛집"],
+                mapQuery: "동해시 발한동 장칼국수 맛집",
+                relatedSpotId: 5
+            },
+            {
+                id: "4tZZkXDrV1o",
+                area: "동해 · 묵호권역",
+                title: "동해 묵호에서 꼭 가야 할 맛집 4곳 하이라이트",
+                desc: "장칼국수, 감자옹심이, 막회, 곰치국 등 동해시 대표 향토 별미 4가지를 짧게 담은 쇼츠입니다.",
+                tags: ["#감자옹심이", "#곰치국", "#막회", "#장칼국수"],
+                mapQuery: "동해시 묵호 감자옹심이 장칼국수",
+                relatedSpotId: 1
+            },
+            {
+                id: "QHCAiRd_tx0",
+                area: "묵호항 · 어달권역",
+                title: "동해 묵호 모듬회·물회 맛집 쇼츠",
+                desc: "동해 바다 바로 앞에서 즐기는 신선한 모듬회와 시원한 물회 구성을 담은 현지 맛집 쇼츠입니다.",
+                tags: ["#동해물회", "#모듬회", "#어달해변", "#묵호항"],
+                mapQuery: "동해시 묵호 물회 횟집",
+                relatedSpotId: 9
+            }
+        ];
+
+        let currentFoodShortIdx = -1;
+
+        function initFoodShorts() {
+            renderRandomFoodShort(false);
+        }
+
+        function renderRandomFoodShort(autoplay = false, forcedIdx = null) {
+            if (!donghaeFoodShorts.length) return;
+
+            let nextIdx = forcedIdx;
+            if (nextIdx === null) {
+                nextIdx = Math.floor(Math.random() * donghaeFoodShorts.length);
+                if (donghaeFoodShorts.length > 1 && nextIdx === currentFoodShortIdx) {
+                    nextIdx = (nextIdx + 1) % donghaeFoodShorts.length;
+                }
+            }
+            currentFoodShortIdx = nextIdx;
+            const item = donghaeFoodShorts[currentFoodShortIdx];
+
+            const iframeEl = document.getElementById("donghaeFoodShortIframe");
+            const ytLinkEl = document.getElementById("shortYoutubeDirectLink");
+            const areaEl = document.getElementById("shortAreaBadge");
+            const counterEl = document.getElementById("shortCounterBadge");
+            const titleEl = document.getElementById("shortTitleText");
+            const descEl = document.getElementById("shortDescText");
+            const tagsEl = document.getElementById("shortMenuTags");
+            const naverBtnEl = document.getElementById("shortNaverMapBtn");
+
+            const autoQuery = autoplay ? "&autoplay=1&mute=1" : "&mute=1";
+            if (iframeEl) {
+                iframeEl.src = `https://www.youtube.com/embed/${item.id}?rel=0&playsinline=1${autoQuery}`;
+            }
+            if (ytLinkEl) {
+                ytLinkEl.href = `https://www.youtube.com/shorts/${item.id}`;
+            }
+            if (areaEl) areaEl.textContent = item.area;
+            if (counterEl) counterEl.textContent = `${currentFoodShortIdx + 1} / ${donghaeFoodShorts.length}`;
+            if (titleEl) titleEl.textContent = item.title;
+            if (descEl) descEl.textContent = item.desc;
+            if (naverBtnEl) {
+                naverBtnEl.href = `https://map.naver.com/v5/search/${encodeURIComponent(item.mapQuery)}`;
+            }
+            if (tagsEl) {
+                tagsEl.innerHTML = item.tags.map(t =>
+                    `<span class="bg-white border border-slate-200 text-slate-600 text-[11px] font-semibold px-2.5 py-1 rounded-lg">${t}</span>`
+                ).join("");
+            }
+
+            renderShortPlaylistPills();
+        }
+
+        function renderShortPlaylistPills() {
+            const listEl = document.getElementById("shortPlaylistPills");
+            if (!listEl) return;
+
+            listEl.innerHTML = donghaeFoodShorts.map((s, idx) => {
+                const active = idx === currentFoodShortIdx;
+                return `
+                    <button type="button" onclick="renderRandomFoodShort(true, ${idx})"
+                        class="text-left p-2.5 rounded-xl border text-xs transition flex items-center justify-between gap-2 ${
+                            active
+                                ? 'bg-donghae-blue/10 border-donghae-blue text-donghae-deep font-bold'
+                                : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-600'
+                        }">
+                        <span class="truncate">${idx + 1}. ${s.title}</span>
+                        <i class="fas ${active ? 'fa-volume-high text-donghae-blue' : 'fa-play text-slate-400'} text-[10px] shrink-0"></i>
+                    </button>
+                `;
+            }).join("");
+        }
+
+        function focusRelatedShortSpot() {
+            const item = donghaeFoodShorts[currentFoodShortIdx];
+            if (item && item.relatedSpotId) {
+                focusSpotOnMap(item.relatedSpotId);
+            }
+        }
 
         // --- 2-1. TOURISM LIVE CCTV SYSTEM ---
         function initCctvViewer() {
@@ -1938,6 +2170,8 @@
                     reply = "🏖️ <b>어달해변 맛집·카페</b>: 해안로·일출로 라인에 카페 한결, 카페 코스타, 투썸플레이스 어달해변점 등 오션뷰 카페가 모여 있고, 인근 어달항·묵호항 쪽으로 황해횟집 등 횟집과 연결됩니다.";
                 } else if (text.includes("묵호항")) {
                     reply = "⚓ <b>묵호항 맛집·카페</b>: 오뚜기칼국수, 거동탕수육, 항구 수산물 식당가와 함께 카라멜스테이션, 라운드어바웃, 아폰트 커피, 도야하우스 등 개성 있는 카페가 가깝습니다.";
+                } else if (text.includes("쇼츠") || text.includes("영상")) {
+                    reply = "🎬 <b>동해시 현지인 맛집 랜덤 쇼츠</b>: 페이지 중간의 '현지인맛집쇼츠' 섹션에서 묵호·발한동·어달 권역 맛집 쇼츠를 랜덤으로 바로 재생하고 네이버 지도 검색까지 이어서 보실 수 있습니다.";
                 } else if (text.includes("맛집") || text.includes("카페")) {
                     reply = "🍽️☕ <b>동해 대표 맛집·카페 요약</b>: 묵호·어달·도째비골 권역은 오뚜기칼국수, 거동탕수육, 카페 한결, 카페 코스타, 카라멜스테이션, 망상 권역은 베이커리카페 글렘·현상소, 북평민속시장은 동남식당·더좋은수산·칼국수 골목이 인기입니다.";
                 } else if (text.toLowerCase().includes("cctv") || text.includes("실시간") || text.includes("파고")) {
