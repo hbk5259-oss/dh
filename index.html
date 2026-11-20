@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts (Noto Sans KR & Montserrat) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS & JS for Interactive Map (No API Key Required) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <script>
         tailwind.config = {
@@ -97,13 +100,25 @@
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
+        /* Leaflet z-index fix below sticky header & modals */
+        #donghaeTourMap {
+            z-index: 10;
+        }
+        .leaflet-popup-content-wrapper {
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+        }
+        .leaflet-popup-content {
+            margin: 12px 14px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-donghae-sky selection:text-white">
 
     <!-- Top Alert Banner -->
     <div class="bg-gradient-to-r from-donghae-deep to-donghae-blue text-white text-xs md:text-sm py-2 px-4 shadow-sm">
-        <div class="max-w-7xl mx-mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-2">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
             <div class="flex items-center space-x-2">
                 <span class="bg-emerald-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full animate-pulse">실시간</span>
                 <span class="truncate">동해시 스마트시티 대청소 및 플로깅 캠페인 진행 중 (11.01 ~ 11.30)</span>
@@ -148,7 +163,7 @@
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-donghae-blue transition-all group-hover:w-full"></span>
                     </a>
                     <a href="#tourism" class="hover:text-donghae-blue transition-colors py-2 relative group">
-                        스마트관광
+                        스마트관광·지도
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-donghae-blue transition-all group-hover:w-full"></span>
                     </a>
                     <a href="#notices" class="hover:text-donghae-blue transition-colors py-2 relative group">
@@ -188,7 +203,7 @@
             <input type="text" placeholder="통합 검색..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 border rounded-lg">
             <a href="#services" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">시민서비스</a>
             <a href="#dashboard" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트현황판</a>
-            <a href="#tourism" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트관광</a>
+            <a href="#tourism" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트관광·지도</a>
             <a href="#notices" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">시정소식</a>
             <a href="#transport" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트교통</a>
             <button onclick="openChatbot(); toggleMobileMenu();" class="w-full bg-donghae-blue text-white py-2 rounded-lg font-medium">AI 민원상담 시작</button>
@@ -217,7 +232,7 @@
                     </h1>
 
                     <p class="text-slate-200 text-base sm:text-lg max-w-2xl font-light">
-                        실시간 해양·기상 데이터, 지능형 시민 서비스, AI 행정 지원까지.<br class="hidden sm:inline">
+                        실시간 해양·기상 데이터, 지능형 시민 서비스, 스마트 관광 지도까지.<br class="hidden sm:inline">
                         동해시민과 방문객을 위한 맞춤형 스마트 서비스를 경험해보세요.
                     </p>
 
@@ -226,7 +241,7 @@
                         <div class="pl-3 text-slate-300">
                             <i class="fas fa-search text-lg"></i>
                         </div>
-                        <input type="text" id="heroSearchInput" placeholder="무엇을 찾으시나요? (예: 여권 발급, 무릉계곡, 동해페이)" class="w-full bg-transparent text-white placeholder-slate-300 px-2 py-2 focus:outline-none text-sm sm:text-base">
+                        <input type="text" id="heroSearchInput" placeholder="무엇을 찾으시나요? (예: 여권 발급, 천곡황금박쥐동굴, 북평시장)" class="w-full bg-transparent text-white placeholder-slate-300 px-2 py-2 focus:outline-none text-sm sm:text-base">
                         <button onclick="handleHeroSearch()" class="bg-donghae-sky hover:bg-donghae-teal text-white px-5 py-3 rounded-xl font-bold shadow-lg transition duration-200 shrink-0 text-sm">
                             검색
                         </button>
@@ -237,8 +252,8 @@
                         <span class="font-medium text-slate-400">자주 찾는 검색어:</span>
                         <button onclick="setSearch('대형폐기물')" class="hover:underline bg-white/10 px-2.5 py-1 rounded-full">#대형폐기물</button>
                         <button onclick="setSearch('도째비골')" class="hover:underline bg-white/10 px-2.5 py-1 rounded-full">#도째비골</button>
-                        <button onclick="setSearch('주민등록등본')" class="hover:underline bg-white/10 px-2.5 py-1 rounded-full">#주민등록등본</button>
-                        <button onclick="setSearch('스마트 주차장')" class="hover:underline bg-white/10 px-2.5 py-1 rounded-full">#스마트주차장</button>
+                        <button onclick="setSearch('천곡황금박쥐동굴')" class="hover:underline bg-white/10 px-2.5 py-1 rounded-full">#천곡황금박쥐동굴</button>
+                        <button onclick="setSearch('북평민속시장')" class="hover:underline bg-white/10 px-2.5 py-1 rounded-full">#북평민속시장</button>
                     </div>
                 </div>
 
@@ -567,21 +582,42 @@
         </div>
     </section>
 
-    <!-- SECTION 3: INTERACTIVE TOURISM (스마트 관광 &명소) -->
+    <!-- SECTION 3: INTERACTIVE TOURISM & MAP (스마트 관광 & 명소 지도) -->
     <section id="tourism" class="py-16 px-4 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
             <div>
-                <span class="text-xs font-bold text-donghae-teal uppercase tracking-wider">Discover Donghae</span>
+                <span class="text-xs font-bold text-donghae-teal uppercase tracking-wider">Discover Donghae & Smart Map</span>
                 <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1">동해시 대표 스마트 관광 명소</h2>
             </div>
 
             <!-- Tourist spot category filter -->
             <div class="mt-4 md:mt-0 flex flex-wrap gap-2" id="tourFilterBtns">
-                <button onclick="filterSpots('all')" class="tour-filter-btn active bg-donghae-blue text-white px-4 py-1.5 rounded-full text-xs font-bold transition">전체</button>
-                <button onclick="filterSpots('ocean')" class="tour-filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-full text-xs font-bold transition">해변·바다</button>
-                <button onclick="filterSpots('mountain')" class="tour-filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-full text-xs font-bold transition">계곡·산림</button>
-                <button onclick="filterSpots('experience')" class="tour-filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-full text-xs font-bold transition">스카이·체험</button>
+                <button onclick="filterSpots('all', this)" class="tour-filter-btn active bg-donghae-blue text-white px-4 py-1.5 rounded-full text-xs font-bold transition">전체</button>
+                <button onclick="filterSpots('ocean', this)" class="tour-filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-full text-xs font-bold transition">해변·바다</button>
+                <button onclick="filterSpots('mountain', this)" class="tour-filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-full text-xs font-bold transition">계곡·동굴</button>
+                <button onclick="filterSpots('experience', this)" class="tour-filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-full text-xs font-bold transition">스카이·체험</button>
+                <button onclick="filterSpots('market', this)" class="tour-filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 px-4 py-1.5 rounded-full text-xs font-bold transition">전통시장·먹거리</button>
             </div>
+        </div>
+
+        <!-- Interactive Map Box -->
+        <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80 mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 px-1">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-donghae-blue/10 text-donghae-blue flex items-center justify-center text-sm">
+                        <i class="fas fa-map-location-dot"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-sm sm:text-base">동해시 관광 명소 스마트 위치 지도</h3>
+                        <p class="text-[11px] text-slate-500">마커를 클릭하거나 아래 카드의 '지도 위치' 버튼을 누르면 해당 명소 위치로 이동합니다.</p>
+                    </div>
+                </div>
+                <button onclick="resetMapView()" class="self-start sm:self-auto bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fas fa-expand text-donghae-blue"></i>
+                    <span>동해시 전체 권역 보기</span>
+                </button>
+            </div>
+            <div id="donghaeTourMap" class="w-full h-72 sm:h-96 rounded-2xl border border-slate-200 overflow-hidden"></div>
         </div>
 
         <!-- Tourism Grid -->
@@ -731,8 +767,9 @@
                         <p class="font-semibold text-donghae-blue">안녕하세요! 동해시 스마트 AI 도우미입니다. 👋</p>
                         <p>원하시는 행정 민원, 추천 관광지, 주차/교통 정보를 물어보세요!</p>
                         <div class="pt-2 flex flex-wrap gap-1">
+                            <button onclick="sendQuickChat('천곡황금박쥐동굴 가이드')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-[11px] text-slate-600">🦇 황금박쥐동굴</button>
+                            <button onclick="sendQuickChat('북평민속시장 장날')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-[11px] text-slate-600">🏮 북평민속시장</button>
                             <button onclick="sendQuickChat('추암 촛대바위 운영시간')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-[11px] text-slate-600">🌊 추암 촛대바위</button>
-                            <button onclick="sendQuickChat('여권 발급 준비물')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-[11px] text-slate-600">📄 여권 발급</button>
                             <button onclick="sendQuickChat('동해페이 신청방법')" class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-[11px] text-slate-600">💳 동해페이</button>
                         </div>
                     </div>
@@ -775,6 +812,9 @@
                 name: "도째비골 스카이밸리",
                 category: "experience",
                 tag: "스카이워크·체험",
+                address: "강원특별자치도 동해시 묵호진동 2-109",
+                lat: 37.5553,
+                lng: 129.1187,
                 img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
                 desc: "묵호등대 인근에 위치한 해발 59m 높이의 하늘산책로와 자이언트 슬라이드, 자전거 체험시설.",
                 rating: 4.9,
@@ -785,6 +825,9 @@
                 name: "추암 촛대바위 & 출렁다리",
                 category: "ocean",
                 tag: "동해 애국가 일출 명소",
+                address: "강원특별자치도 동해시 촛대바위길 28",
+                lat: 37.4789,
+                lng: 129.1597,
                 img: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=600&q=80",
                 desc: "해돋이와 기암괴석이 어우러진 동해 최고의 명승지. 해안 출렁다리에서 바라보는 수려한 절경.",
                 rating: 4.9,
@@ -795,6 +838,9 @@
                 name: "무릉계곡 (무릉반석)",
                 category: "mountain",
                 tag: "명승 제37호",
+                address: "강원특별자치도 동해시 삼화로 538",
+                lat: 37.4608,
+                lng: 129.0156,
                 img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
                 desc: "신선이 놀았다는 삼화사 및 무릉반석, 베틀바위 산성길까지 펼쳐진 청정 힐링 계곡.",
                 rating: 4.8,
@@ -805,6 +851,9 @@
                 name: "망상해수욕장",
                 category: "ocean",
                 tag: "동해안 최대 백사장",
+                address: "강원특별자치도 동해시 동해대로 6270-10",
+                lat: 37.5934,
+                lng: 129.0912,
                 img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
                 desc: "울창한 송림과 깨끗한 백사장이 끝없이 펼쳐진 동해안 대표 명품 해수욕장 및 오토캠핑장.",
                 rating: 4.7,
@@ -815,6 +864,9 @@
                 name: "논골담길 (묵호벽화마을)",
                 category: "experience",
                 tag: "감성 벽화 마을",
+                address: "강원특별자치도 동해시 묵호진동 일대",
+                lat: 37.5529,
+                lng: 129.1165,
                 img: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80",
                 desc: "묵호항 삶의 역사와 옛 이야기를 벽화로 간직한 아기자기한 감성 카페거리.",
                 rating: 4.6,
@@ -825,10 +877,39 @@
                 name: "무릉별유천지",
                 category: "experience",
                 tag: "액티비티 테마파크",
+                address: "강원특별자치도 동해시 이기로 97",
+                lat: 37.4795,
+                lng: 129.0472,
                 img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
                 desc: "석회석 채광지를 창조적으로 재개발한 웅장한 라벤더 정원 및 스카이글라이더 액티비티.",
                 rating: 4.9,
                 status: "운영 중 (09:30 - 17:30)"
+            },
+            {
+                id: 7,
+                name: "천곡황금박쥐동굴",
+                category: "mountain",
+                tag: "도심 속 천연 석회암 동굴",
+                address: "강원특별자치도 동해시 동굴로 50 (천곡동)",
+                lat: 37.5197,
+                lng: 129.1066,
+                img: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=600&q=80",
+                desc: "강원특별자치도 동해시 동굴로 50에 위치한 국내 유일 시내 중심가 천연 동굴. 종유석·석순과 돌리네 탐방로 관람.",
+                rating: 4.8,
+                status: "운영 중 (동해시시설관리공단 안내 기준)"
+            },
+            {
+                id: 8,
+                name: "북평민속시장",
+                category: "market",
+                tag: "전통 5일장 (3·8일장)",
+                address: "강원특별자치도 동해시 오일장길 32 (북평동)",
+                lat: 37.4847,
+                lng: 129.1158,
+                img: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=600&q=80",
+                desc: "동해시 오일장길 32 일대에서 열리는 영동권 대표 전통시장. 상설 점포 및 매월 끝자리 3·8일 5일장과 칼국수·전 먹거리 명소.",
+                rating: 4.8,
+                status: "상설 운영 / 3·8일 5일장"
             }
         ];
 
@@ -870,13 +951,108 @@
             ]
         };
 
+        // --- MAP STATE ---
+        let tourMap = null;
+        let markersLayer = null;
+        const markerById = {};
+        const DONGHAE_CENTER = [37.5245, 129.1050];
+
         // --- 2. INITIALIZATION & RENDER FUNCTIONS ---
         window.onload = function() {
             startClock();
+            initTourMap();
             renderTourSpots('all');
             switchNoticeTab('news');
             updateBusInfo();
         };
+
+        // Initialize Leaflet Interactive Map
+        function initTourMap() {
+            const mapEl = document.getElementById('donghaeTourMap');
+            if (!mapEl || typeof L === 'undefined') return;
+
+            tourMap = L.map('donghaeTourMap', {
+                center: DONGHAE_CENTER,
+                zoom: 12,
+                scrollWheelZoom: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(tourMap);
+
+            markersLayer = L.layerGroup().addTo(tourMap);
+        }
+
+        function updateMapMarkers(spots) {
+            if (!tourMap || !markersLayer) return;
+            markersLayer.clearLayers();
+            Object.keys(markerById).forEach(k => delete markerById[k]);
+
+            const bounds = [];
+
+            spots.forEach(spot => {
+                const marker = L.marker([spot.lat, spot.lng]).addTo(markersLayer);
+                marker.bindPopup(`
+                    <div style="min-width:190px;">
+                        <div style="font-size:11px;font-weight:700;color:#005bac;margin-bottom:2px;">${spot.tag}</div>
+                        <div style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:4px;">${spot.name}</div>
+                        <div style="font-size:11px;color:#475569;margin-bottom:8px;">📍 ${spot.address}</div>
+                        <button onclick="openSpotModal('${spot.name}')" style="width:100%;background:#005bac;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;">
+                            상세 가이드 보기
+                        </button>
+                    </div>
+                `);
+                markerById[spot.id] = marker;
+                bounds.push([spot.lat, spot.lng]);
+            });
+
+            if (bounds.length > 0) {
+                tourMap.fitBounds(bounds, { padding: [36, 36], maxZoom: 13 });
+            }
+        }
+
+        function focusSpotOnMap(spotId) {
+            const spot = tourSpots.find(s => s.id === spotId);
+            if (!spot || !tourMap) return;
+
+            const mapSection = document.getElementById('donghaeTourMap');
+            if (mapSection) {
+                mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Ensure marker is visible even if filtered out previously
+            if (!markerById[spot.id]) {
+                renderTourSpots('all');
+                const allBtn = document.querySelector('#tourFilterBtns .tour-filter-btn');
+                if (allBtn) {
+                    document.querySelectorAll('.tour-filter-btn').forEach(btn => {
+                        btn.classList.remove('bg-donghae-blue', 'text-white');
+                        btn.classList.add('bg-slate-100', 'text-slate-600');
+                    });
+                    allBtn.classList.remove('bg-slate-100', 'text-slate-600');
+                    allBtn.classList.add('bg-donghae-blue', 'text-white');
+                }
+            }
+
+            tourMap.setView([spot.lat, spot.lng], 15, { animate: true });
+            const targetMarker = markerById[spot.id];
+            if (targetMarker) {
+                targetMarker.openPopup();
+            }
+        }
+
+        function resetMapView() {
+            if (!tourMap) return;
+            const visibleMarkers = Object.values(markerById);
+            if (visibleMarkers.length > 0) {
+                const group = L.featureGroup(visibleMarkers);
+                tourMap.fitBounds(group.getBounds(), { padding: [36, 36], maxZoom: 13 });
+            } else {
+                tourMap.setView(DONGHAE_CENTER, 12);
+            }
+        }
 
         // Live Clock
         function startClock() {
@@ -913,6 +1089,8 @@
                 ? tourSpots 
                 : tourSpots.filter(spot => spot.category === filterCategory);
 
+            updateMapMarkers(filtered);
+
             filtered.forEach(spot => {
                 const card = document.createElement('div');
                 card.className = "group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 flex flex-col justify-between";
@@ -930,17 +1108,23 @@
 
                         <div class="p-5">
                             <h3 class="text-lg font-bold text-slate-900 group-hover:text-donghae-blue transition">${spot.name}</h3>
+                            <p class="text-[11px] text-slate-400 mt-1"><i class="fas fa-location-dot text-donghae-sky mr-1"></i>${spot.address}</p>
                             <p class="text-xs text-slate-500 mt-2 leading-relaxed">${spot.desc}</p>
                         </div>
                     </div>
 
-                    <div class="px-5 pb-5 pt-2 flex justify-between items-center border-t border-slate-50">
+                    <div class="px-5 pb-5 pt-2 flex flex-wrap justify-between items-center gap-2 border-t border-slate-50">
                         <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">
                             <i class="fas fa-clock text-[10px]"></i> ${spot.status}
                         </span>
-                        <button onclick="openSpotModal('${spot.name}')" class="text-xs text-donghae-blue font-bold hover:underline">
-                            상세보기 <i class="fas fa-arrow-right text-[10px]"></i>
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="focusSpotOnMap(${spot.id})" class="text-xs bg-sky-50 hover:bg-sky-100 text-donghae-blue px-2.5 py-1 rounded-lg font-bold transition">
+                                <i class="fas fa-map-pin text-[10px] mr-0.5"></i> 지도 위치
+                            </button>
+                            <button onclick="openSpotModal('${spot.name}')" class="text-xs text-donghae-blue font-bold hover:underline">
+                                상세보기 <i class="fas fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
                 container.appendChild(card);
@@ -948,14 +1132,17 @@
         }
 
         // Filter Tourism Buttons Action
-        function filterSpots(category) {
+        function filterSpots(category, btnEl) {
             const btns = document.querySelectorAll('.tour-filter-btn');
             btns.forEach(btn => {
                 btn.classList.remove('bg-donghae-blue', 'text-white');
                 btn.classList.add('bg-slate-100', 'text-slate-600');
             });
-            event.target.classList.remove('bg-slate-100', 'text-slate-600');
-            event.target.classList.add('bg-donghae-blue', 'text-white');
+            const activeBtn = btnEl || (typeof event !== 'undefined' ? event.target : null);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-100', 'text-slate-600');
+                activeBtn.classList.add('bg-donghae-blue', 'text-white');
+            }
 
             renderTourSpots(category);
         }
@@ -1021,7 +1208,6 @@
             const dustEl = document.getElementById('liveDust');
             const timeEl = document.getElementById('liveDataTime');
 
-            // Random slight fluctuation for realistic preview
             const newTemp = (19 + Math.random() * 0.8).toFixed(1);
             const newSea = (17 + Math.random() * 0.5).toFixed(1);
             const newDust = Math.floor(18 + Math.random() * 8);
@@ -1041,6 +1227,14 @@
             const val = document.getElementById('heroSearchInput').value.trim();
             if(!val) {
                 alert('검색어를 입력해 주세요.');
+                return;
+            }
+            if (val.includes('박쥐') || val.includes('동굴') || val.includes('천곡')) {
+                openSpotModal('천곡황금박쥐동굴');
+                return;
+            }
+            if (val.includes('북평') || val.includes('시장')) {
+                openSpotModal('북평민속시장');
                 return;
             }
             openServiceModal(`'${val}' 검색 결과`);
@@ -1075,18 +1269,39 @@
             const spot = tourSpots.find(s => s.name === spotName);
             if (!spot) return;
 
+            let extraGuide = `
+                <div><strong>위치 주소:</strong> ${spot.address}</div>
+                <div><strong>주차 정보:</strong> 인근 공영주차장 연동 가능</div>
+            `;
+            if (spot.name === "천곡황금박쥐동굴") {
+                extraGuide = `
+                    <div><strong>위치 안내:</strong> ${spot.address}</div>
+                    <div><strong>관람 가이드:</strong> 동굴 내부 기온이 연중 10~15℃로 서늘하므로 얇은 겉옷과 편한 운동화를 준비하고, 낮은 구간에서는 안전 헬멧을 착용하세요. 외부 돌리네 탐방로도 함께 관람할 수 있습니다.</div>
+                `;
+            } else if (spot.name === "북평민속시장") {
+                extraGuide = `
+                    <div><strong>위치 및 장날:</strong> ${spot.address} (매월 끝자리 3·8일 5일장)</div>
+                    <div><strong>방문 가이드:</strong> 장날 오전~낮 시간대 방문 시 인근 공영주차장을 이용하시고, 시장 대표 먹거리(칼국수·전·분식)와 추암 촛대바위·묵호항 코스를 함께 연계해 보세요.</div>
+                `;
+            }
+
             const content = document.getElementById('modalContent');
             content.innerHTML = `
                 <div class="rounded-2xl overflow-hidden h-40 mb-3">
-                    <img src="${spot.img}" class="w-full h-full object-cover">
+                    <img src="${spot.img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/005bac/ffffff?text=Donghae+Spot'">
                 </div>
-                <h3 class="font-extrabold text-xl text-slate-900">${spot.name}</h3>
+                <div class="flex items-center justify-between gap-2">
+                    <h3 class="font-extrabold text-xl text-slate-900">${spot.name}</h3>
+                    <button onclick="closeModal(); focusSpotOnMap(${spot.id});" class="bg-donghae-blue text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-donghae-deep transition shrink-0">
+                        <i class="fas fa-map-location-dot mr-1"></i> 지도에서 보기
+                    </button>
+                </div>
                 <span class="inline-block bg-donghae-sky/10 text-donghae-blue text-xs font-bold px-2.5 py-0.5 rounded-full my-2">${spot.tag}</span>
                 <p class="text-xs text-slate-600 leading-relaxed mb-3">${spot.desc}</p>
-                <div class="space-y-1 text-xs text-slate-500 bg-slate-50 p-3 rounded-xl">
+                <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl leading-relaxed">
                     <div><strong>운영 정보:</strong> ${spot.status}</div>
                     <div><strong>관람 평점:</strong> ⭐ ${spot.rating} / 5.0</div>
-                    <div><strong>주차 정보:</strong> 인근 공영주차장 연동 가능</div>
+                    ${extraGuide}
                 </div>
             `;
             document.getElementById('generalModal').classList.remove('hidden');
@@ -1151,7 +1366,11 @@
             setTimeout(() => {
                 let reply = "문의해주신 내용에 대한 동해시 스마트 답변입니다. 추가 민원 서류는 시청 누리집 민원안내 탭에서 즉시 신청하실 수 있습니다.";
                 
-                if (text.includes("추암") || text.includes("촛대바위")) {
+                if (text.includes("박쥐") || text.includes("동굴") || text.includes("천곡")) {
+                    reply = "🦇 <b>천곡황금박쥐동굴 가이드</b>: 동해시 동굴로 50에 위치한 도심 속 천연 석회암 동굴입니다. 내부 기온이 약 10~15℃로 서늘하니 겉옷과 운동화를 착용하시고, 낮은 구간에서는 안전 헬멧을 꼭 써주세요.";
+                } else if (text.includes("북평") || text.includes("시장") || text.includes("장날")) {
+                    reply = "🏮 <b>북평민속시장 안내</b>: 동해시 오일장길 32 일대에 있으며 상설 점포와 함께 매월 끝자리 3·8일(3, 8, 13, 18, 23, 28일)마다 전통 5일장이 열립니다. 시장 먹거리와 인근 공영주차장을 함께 이용해 보세요.";
+                } else if (text.includes("추암") || text.includes("촛대바위")) {
                     reply = "🌊 <b>추암 촛대바위 안내</b>: 24시간 연중무휴 무료로 입장이 가능하며, 야간 조명쇼는 매일 19시~21시까지 운용됩니다. 출렁다리와 해안 산책로를 함께 둘러보시길 추천합니다.";
                 } else if (text.includes("여권")) {
                     reply = "📄 <b>여권 발급 준비물</b>: 신분증, 최근 6개월 이내 촬영한 여권용 사진 1매, 기존 여권(유효기간 남은 경우). 동해시청 1층 민원실에서 발급 가능합니다.";
