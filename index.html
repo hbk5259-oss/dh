@@ -241,7 +241,7 @@
                         <div class="pl-3 text-slate-300">
                             <i class="fas fa-search text-lg"></i>
                         </div>
-                        <input type="text" id="heroSearchInput" placeholder="무엇을 찾으시나요? (예: 여권 발급, 천곡황금박쥐동굴, 북평시장)" class="w-full bg-transparent text-white placeholder-slate-300 px-2 py-2 focus:outline-none text-sm sm:text-base">
+                        <input type="text" id="heroSearchInput" placeholder="무엇을 찾으시나요? (예: 어달해변, 묵호항, 천곡황금박쥐동굴, 북평시장)" class="w-full bg-transparent text-white placeholder-slate-300 px-2 py-2 focus:outline-none text-sm sm:text-base">
                         <button onclick="handleHeroSearch()" class="bg-donghae-sky hover:bg-donghae-teal text-white px-5 py-3 rounded-xl font-bold shadow-lg transition duration-200 shrink-0 text-sm">
                             검색
                         </button>
@@ -819,7 +819,9 @@
                 img: "./images/spots/dojjebigol.png",
                 desc: "묵호등대 인근에 위치한 해발 59m 높이의 하늘산책로와 자이언트 슬라이드, 자전거 체험시설.",
                 rating: 4.9,
-                status: "운영 중 (09:00 - 18:00)"
+                status: "운영 중 (09:00 - 18:00)",
+                eats: ["거동탕수육 (일출로 83)", "묵호항·어달항 횟집 거리"],
+                cafes: ["째비네컷앤카페 (도째비골 인근)", "묵호 287 (도째비골 인근)"]
             },
             {
                 id: 2,
@@ -832,7 +834,9 @@
                 img: "./images/spots/chuam.png",
                 desc: "해돋이와 기암괴석이 어우러진 동해 최고의 명승지. 해안 출렁다리에서 바라보는 수려한 절경.",
                 rating: 4.9,
-                status: "연중무휴 (24시간 입장가능)"
+                status: "연중무휴 (24시간 입장가능)",
+                eats: ["추암해변 해물·횟집 거리", "북평민속시장 먹거리 (차량 약 10분)"],
+                cafes: ["추암 오션뷰 해안 카페거리"]
             },
             {
                 id: 3,
@@ -845,7 +849,9 @@
                 img: "./images/spots/mureung-valley.png",
                 desc: "신선이 놀았다는 삼화사 및 무릉반석, 베틀바위 산성길까지 펼쳐진 청정 힐링 계곡.",
                 rating: 4.8,
-                status: "입장 가능 (08:00 - 17:30)"
+                status: "입장 가능 (08:00 - 17:30)",
+                eats: ["무릉계곡 산채정식·두부·도토리묵 식당가", "삼화사 입구 음식점"],
+                cafes: ["무릉계곡 입구 카페·찻집", "무릉별유천지 전망카페"]
             },
             {
                 id: 4,
@@ -858,7 +864,9 @@
                 img: "./images/spots/mangsang.png",
                 desc: "울창한 송림과 깨끗한 백사장이 끝없이 펼쳐진 동해안 대표 명품 해수욕장 및 오토캠핑장.",
                 rating: 4.7,
-                status: "시설 상시 개방"
+                status: "시설 상시 개방",
+                eats: ["망상해변 횟집·조개구이 거리", "망상동 해안 식당가"],
+                cafes: ["베이커리카페 글렘 (망상동 393-78)", "현상소 (망상해수욕장 인근)"]
             },
             {
                 id: 5,
@@ -871,7 +879,9 @@
                 img: "./images/spots/nongoldam.png",
                 desc: "묵호항 삶의 역사와 옛 이야기를 벽화로 간직한 아기자기한 감성 카페거리.",
                 rating: 4.6,
-                status: "상시 관람 가능"
+                status: "상시 관람 가능",
+                eats: ["오뚜기칼국수", "키토리아 동해대게빵베이커리 (논골길 2-2)"],
+                cafes: ["논골담길 전망 카페·당고 카페", "등대카페 (등대오름길 34-5)", "카라멜스테이션"]
             },
             {
                 id: 6,
@@ -884,7 +894,9 @@
                 img: "./images/spots/mureung-byeolyucheonji.png",
                 desc: "석회석 채광지를 창조적으로 재개발한 웅장한 라벤더 정원 및 스카이글라이더 액티비티.",
                 rating: 4.9,
-                status: "운영 중 (09:30 - 17:30)"
+                status: "운영 중 (09:30 - 17:30)",
+                eats: ["무릉별유천지 내 푸드코트·스낵", "무릉계곡·천곡동 식당가"],
+                cafes: ["무릉별유천지 전망카페"]
             },
             {
                 id: 7,
@@ -897,7 +909,9 @@
                 img: "./images/spots/cheongok-cave.png",
                 desc: "강원특별자치도 동해시 동굴로 50에 위치한 국내 유일 시내 중심가 천연 동굴. 종유석·석순과 돌리네 탐방로 관람.",
                 rating: 4.8,
-                status: "운영 중 (동해시시설관리공단 안내 기준)"
+                status: "운영 중 (동해시시설관리공단 안내 기준)",
+                eats: ["천곡동 맛집 거리 (묵호정 일식당, 장군시오야끼 등)"],
+                cafes: ["포솜케이크 (동굴로 136 2층)", "지구인커피·동해제빵소 (천곡동 일대)"]
             },
             {
                 id: 8,
@@ -910,7 +924,39 @@
                 img: "./images/spots/bukpyeong-market.png",
                 desc: "동해시 오일장길 32 일대에서 열리는 영동권 대표 전통시장. 상설 점포 및 매월 끝자리 3·8일 5일장과 칼국수·전 먹거리 명소.",
                 rating: 4.8,
-                status: "상설 운영 / 3·8일 5일장"
+                status: "상설 운영 / 3·8일 5일장",
+                eats: ["동남식당 (소머리국밥·순대국밥)", "더좋은수산 (회 포장 전문)", "시장 칼국수·전 골목"],
+                cafes: ["텐퍼센트커피 북평시장점", "동해제빵소 (천곡·북평 인근)"]
+            },
+            {
+                id: 9,
+                name: "어달해변",
+                category: "ocean",
+                tag: "한적한 해안 산책·오션뷰",
+                address: "강원특별자치도 동해시 일출로 297 일대 (어달동)",
+                lat: 37.5642,
+                lng: 129.1128,
+                img: "./images/spots/eodal-beach.png",
+                desc: "묵호 북쪽 어달동 일대에 자리한 아늑한 해안으로, 잔잔한 동해 바다와 해안 산책로·오션뷰 카페가 어우러진 휴식 명소.",
+                rating: 4.8,
+                status: "해안 산책 상시 개방",
+                eats: ["황해횟집 (어달항 인근)", "어달항 해산물·회 식당가"],
+                cafes: ["카페 한결 (일출로 195, 어달항 초입 오션뷰)", "카페 코스타 (해안로 79 오션뷰·디저트)", "투썸플레이스 어달해변점 (일출로 297)"]
+            },
+            {
+                id: 10,
+                name: "묵호항",
+                category: "ocean",
+                tag: "항구·수산물·감성 골목 연계",
+                address: "강원특별자치도 동해시 해안로 285 일대 (묵호진동)",
+                lat: 37.5485,
+                lng: 129.1152,
+                img: "./images/spots/mukho-port.png",
+                desc: "활기찬 어선 풍경과 수산시장, 묵호역·논골담길·도째비골이 이어지는 동해 북부 대표 항구 거점.",
+                rating: 4.8,
+                status: "항구·수산시장 상시 운영",
+                eats: ["오뚜기칼국수 (묵호 대표 칼국수)", "거동탕수육 (일출로 83)", "묵호항 수산물·횟집 거리"],
+                cafes: ["카라멜스테이션 (발한로 219-11)", "라운드어바웃 (발한로 220)", "아폰트 커피 (발한로 154)", "도야하우스 (발한로 223-1)"]
             }
         ];
 
@@ -1110,6 +1156,10 @@
                             <h3 class="text-lg font-bold text-slate-900 group-hover:text-donghae-blue transition">${spot.name}</h3>
                             <p class="text-[11px] text-slate-400 mt-1"><i class="fas fa-location-dot text-donghae-sky mr-1"></i>${spot.address}</p>
                             <p class="text-xs text-slate-500 mt-2 leading-relaxed">${spot.desc}</p>
+                            <div class="mt-3 pt-2.5 border-t border-slate-100 space-y-1 text-[11px]">
+                                <div class="text-slate-600 line-clamp-1"><span class="font-bold text-amber-600">🍽️ 맛집:</span> ${(spot.eats || []).join(', ')}</div>
+                                <div class="text-slate-600 line-clamp-1"><span class="font-bold text-teal-600">☕ 카페:</span> ${(spot.cafes || []).join(', ')}</div>
+                            </div>
                         </div>
                     </div>
 
@@ -1237,6 +1287,14 @@
                 openSpotModal('북평민속시장');
                 return;
             }
+            if (val.includes('어달')) {
+                openSpotModal('어달해변');
+                return;
+            }
+            if (val.includes('묵호항') || val.includes('항구')) {
+                openSpotModal('묵호항');
+                return;
+            }
             openServiceModal(`'${val}' 검색 결과`);
         }
         function setSearch(tag) {
@@ -1301,6 +1359,8 @@
                 <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl leading-relaxed">
                     <div><strong>운영 정보:</strong> ${spot.status}</div>
                     <div><strong>관람 평점:</strong> ⭐ ${spot.rating} / 5.0</div>
+                    <div><strong>🍽️ 대표 맛집:</strong> ${(spot.eats || []).join(', ')}</div>
+                    <div><strong>☕ 대표 카페:</strong> ${(spot.cafes || []).join(', ')}</div>
                     ${extraGuide}
                 </div>
             `;
@@ -1374,6 +1434,12 @@
                     reply = "🌊 <b>추암 촛대바위 안내</b>: 24시간 연중무휴 무료로 입장이 가능하며, 야간 조명쇼는 매일 19시~21시까지 운용됩니다. 출렁다리와 해안 산책로를 함께 둘러보시길 추천합니다.";
                 } else if (text.includes("여권")) {
                     reply = "📄 <b>여권 발급 준비물</b>: 신분증, 최근 6개월 이내 촬영한 여권용 사진 1매, 기존 여권(유효기간 남은 경우). 동해시청 1층 민원실에서 발급 가능합니다.";
+                } else if (text.includes("어달")) {
+                    reply = "🏖️ <b>어달해변 맛집·카페</b>: 해안로·일출로 라인에 카페 한결, 카페 코스타, 투썸플레이스 어달해변점 등 오션뷰 카페가 모여 있고, 인근 어달항·묵호항 쪽으로 황해횟집 등 횟집과 연결됩니다.";
+                } else if (text.includes("묵호항")) {
+                    reply = "⚓ <b>묵호항 맛집·카페</b>: 오뚜기칼국수, 거동탕수육, 항구 수산물 식당가와 함께 카라멜스테이션, 라운드어바웃, 아폰트 커피, 도야하우스 등 개성 있는 카페가 가깝습니다.";
+                } else if (text.includes("맛집") || text.includes("카페")) {
+                    reply = "🍽️☕ <b>동해 대표 맛집·카페 요약</b>: 묵호·어달·도째비골 권역은 오뚜기칼국수, 거동탕수육, 카페 한결, 카페 코스타, 카라멜스테이션, 망상 권역은 베이커리카페 글렘·현상소, 북평민속시장은 동남식당·더좋은수산·칼국수 골목이 인기입니다.";
                 } else if (text.includes("동해페이")) {
                     reply = "💳 <b>동해페이 카드 안내</b>: '동해페이' 전용 앱에서 발급 신청 가능하며, 월 30만원 한도 내 6%~10% 캐시백 혜택이 제공됩니다.";
                 }
