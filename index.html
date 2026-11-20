@@ -588,6 +588,7 @@
             <div>
                 <span class="text-xs font-bold text-donghae-teal uppercase tracking-wider">Discover Donghae & Smart Map</span>
                 <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1">동해시 대표 스마트 관광 명소</h2>
+                <p class="text-xs text-slate-500 mt-1">관광 명소 이미지는 <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">./images/spots/</code> 폴더에 모아 관리합니다.</p>
             </div>
 
             <!-- Tourist spot category filter -->
@@ -805,7 +806,7 @@
 
     <!-- JAVASCRIPT INTERACTIVE LOGIC -->
     <script>
-        // --- 1. DATA DEFINITIONS ---
+        // --- 1. DATA DEFINITIONS (Local ./images/spots/ folder assets) ---
         const tourSpots = [
             {
                 id: 1,
@@ -815,7 +816,7 @@
                 address: "강원특별자치도 동해시 묵호진동 2-109",
                 lat: 37.5553,
                 lng: 129.1187,
-                img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/dojjebigol.png",
                 desc: "묵호등대 인근에 위치한 해발 59m 높이의 하늘산책로와 자이언트 슬라이드, 자전거 체험시설.",
                 rating: 4.9,
                 status: "운영 중 (09:00 - 18:00)"
@@ -828,7 +829,7 @@
                 address: "강원특별자치도 동해시 촛대바위길 28",
                 lat: 37.4789,
                 lng: 129.1597,
-                img: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/chuam.png",
                 desc: "해돋이와 기암괴석이 어우러진 동해 최고의 명승지. 해안 출렁다리에서 바라보는 수려한 절경.",
                 rating: 4.9,
                 status: "연중무휴 (24시간 입장가능)"
@@ -841,7 +842,7 @@
                 address: "강원특별자치도 동해시 삼화로 538",
                 lat: 37.4608,
                 lng: 129.0156,
-                img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/mureung-valley.png",
                 desc: "신선이 놀았다는 삼화사 및 무릉반석, 베틀바위 산성길까지 펼쳐진 청정 힐링 계곡.",
                 rating: 4.8,
                 status: "입장 가능 (08:00 - 17:30)"
@@ -854,7 +855,7 @@
                 address: "강원특별자치도 동해시 동해대로 6270-10",
                 lat: 37.5934,
                 lng: 129.0912,
-                img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/mangsang.png",
                 desc: "울창한 송림과 깨끗한 백사장이 끝없이 펼쳐진 동해안 대표 명품 해수욕장 및 오토캠핑장.",
                 rating: 4.7,
                 status: "시설 상시 개방"
@@ -867,7 +868,7 @@
                 address: "강원특별자치도 동해시 묵호진동 일대",
                 lat: 37.5529,
                 lng: 129.1165,
-                img: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/nongoldam.png",
                 desc: "묵호항 삶의 역사와 옛 이야기를 벽화로 간직한 아기자기한 감성 카페거리.",
                 rating: 4.6,
                 status: "상시 관람 가능"
@@ -880,7 +881,7 @@
                 address: "강원특별자치도 동해시 이기로 97",
                 lat: 37.4795,
                 lng: 129.0472,
-                img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/mureung-byeolyucheonji.png",
                 desc: "석회석 채광지를 창조적으로 재개발한 웅장한 라벤더 정원 및 스카이글라이더 액티비티.",
                 rating: 4.9,
                 status: "운영 중 (09:30 - 17:30)"
@@ -893,7 +894,7 @@
                 address: "강원특별자치도 동해시 동굴로 50 (천곡동)",
                 lat: 37.5197,
                 lng: 129.1066,
-                img: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/cheongok-cave.png",
                 desc: "강원특별자치도 동해시 동굴로 50에 위치한 국내 유일 시내 중심가 천연 동굴. 종유석·석순과 돌리네 탐방로 관람.",
                 rating: 4.8,
                 status: "운영 중 (동해시시설관리공단 안내 기준)"
@@ -906,7 +907,7 @@
                 address: "강원특별자치도 동해시 오일장길 32 (북평동)",
                 lat: 37.4847,
                 lng: 129.1158,
-                img: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=600&q=80",
+                img: "./images/spots/bukpyeong-market.png",
                 desc: "동해시 오일장길 32 일대에서 열리는 영동권 대표 전통시장. 상설 점포 및 매월 끝자리 3·8일 5일장과 칼국수·전 먹거리 명소.",
                 rating: 4.8,
                 status: "상설 운영 / 3·8일 5일장"
@@ -1022,7 +1023,6 @@
                 mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
-            // Ensure marker is visible even if filtered out previously
             if (!markerById[spot.id]) {
                 renderTourSpots('all');
                 const allBtn = document.querySelector('#tourFilterBtns .tour-filter-btn');
@@ -1096,9 +1096,9 @@
                 card.className = "group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 flex flex-col justify-between";
                 card.innerHTML = `
                     <div>
-                        <div class="relative h-48 overflow-hidden">
-                            <img src="${spot.img}" alt="${spot.name}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/600x400/005bac/ffffff?text=Donghae+Spot'">
-                            <div class="absolute top-3 left-3 bg-slate-900/70 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1 rounded-full">
+                        <div class="relative h-48 overflow-hidden bg-slate-100">
+                            <img src="${spot.img}" alt="${spot.name}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <div class="absolute top-3 left-3 bg-slate-900/75 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1 rounded-full">
                                 ${spot.tag}
                             </div>
                             <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md text-slate-800 text-xs font-extrabold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow">
@@ -1287,8 +1287,8 @@
 
             const content = document.getElementById('modalContent');
             content.innerHTML = `
-                <div class="rounded-2xl overflow-hidden h-40 mb-3">
-                    <img src="${spot.img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/005bac/ffffff?text=Donghae+Spot'">
+                <div class="rounded-2xl overflow-hidden h-40 mb-3 bg-slate-100">
+                    <img src="${spot.img}" alt="${spot.name}" class="w-full h-full object-cover">
                 </div>
                 <div class="flex items-center justify-between gap-2">
                     <h3 class="font-extrabold text-xl text-slate-900">${spot.name}</h3>
