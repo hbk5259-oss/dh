@@ -166,6 +166,11 @@
                         스마트관광·지도
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-donghae-blue transition-all group-hover:w-full"></span>
                     </a>
+                    <a href="#cctvSection" class="hover:text-donghae-blue transition-colors py-2 relative group flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                        관광지CCTV
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-donghae-blue transition-all group-hover:w-full"></span>
+                    </a>
                     <a href="#notices" class="hover:text-donghae-blue transition-colors py-2 relative group">
                         시정소식
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-donghae-blue transition-all group-hover:w-full"></span>
@@ -204,6 +209,7 @@
             <a href="#services" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">시민서비스</a>
             <a href="#dashboard" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트현황판</a>
             <a href="#tourism" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트관광·지도</a>
+            <a href="#cctvSection" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">🔴 관광지 실시간 CCTV</a>
             <a href="#notices" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">시정소식</a>
             <a href="#transport" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-donghae-blue">스마트교통</a>
             <button onclick="openChatbot(); toggleMobileMenu();" class="w-full bg-donghae-blue text-white py-2 rounded-lg font-medium">AI 민원상담 시작</button>
@@ -621,10 +627,164 @@
             <div id="donghaeTourMap" class="w-full h-72 sm:h-96 rounded-2xl border border-slate-200 overflow-hidden"></div>
         </div>
 
+
         <!-- Tourism Grid -->
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="tourGrid">
             <!-- Spot Cards dynamically populated -->
         </div>
+
+        <!-- LIVE TOURISM CCTV VIEWER (주요 관광지 주변 실시간 CCTV 모니터링) -->
+        <div id="cctvSection" class="mt-16 scroll-mt-24">
+            <div class="bg-slate-900 text-white rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-800">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center gap-1.5 bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                                LIVE CCTV · 실시간 현장 확인
+                            </span>
+                            <span class="text-xs text-slate-400">동해시 재난안전·관광 관제 연계</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-black tracking-tight mt-2 flex items-center gap-2.5">
+                            <i class="fas fa-video text-donghae-sky"></i>
+                            <span>주요 관광지 주변 실시간 CCTV 뷰어</span>
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+                            방문 전 해안 파고·기상 상태, 탐방로 개방 여부, 주변 도로·주차 혼잡도를 실시간 화면으로 확인하세요.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button id="cctvGridToggleBtn" onclick="toggleCctvMultiView()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fas fa-table-cells-large text-donghae-sky"></i>
+                            <span>4분할 동시 모니터링</span>
+                        </button>
+                        <button onclick="refreshCctvFeed()" class="bg-donghae-blue hover:bg-donghae-sky text-white px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-lg shadow-donghae-blue/30">
+                            <i class="fas fa-rotate"></i>
+                            <span>영상 새로고침</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Spot CCTV Selector Pills -->
+                <div class="mt-5 flex flex-wrap gap-2" id="cctvSpotSelector">
+                    <!-- JS populated -->
+                </div>
+
+                <!-- Single Main CCTV Monitor + Telemetry Panel -->
+                <div id="cctvSingleView" class="mt-6 grid lg:grid-cols-3 gap-6">
+                    <!-- Main Monitor Screen (2 cols) -->
+                    <div class="lg:col-span-2">
+                        <div id="cctvMonitorBox" class="relative rounded-2xl overflow-hidden bg-black border-2 border-slate-700 aspect-video shadow-2xl group">
+                            <img id="cctvFeedImg" src="./images/spots/chuam.png" alt="CCTV 화면" class="w-full h-full object-cover transition-all duration-700 brightness-95 contrast-105">
+                            
+                            <!-- Scanline & Night/Weather Filter Overlay -->
+                            <div id="cctvScanOverlay" class="pointer-events-none absolute inset-0 opacity-20" style="background: repeating-linear-gradient(0deg, rgba(0,0,0,0.45) 0px, rgba(0,0,0,0.45) 1px, transparent 1px, transparent 3px);"></div>
+                            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/60"></div>
+
+                            <!-- Top OSD Bar -->
+                            <div class="absolute top-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
+                                <div class="flex items-center gap-2 bg-black/65 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/15">
+                                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                                    <span class="font-bold text-rose-400">REC · LIVE</span>
+                                    <span class="text-slate-400">|</span>
+                                    <span id="cctvCamCode" class="text-emerald-300 font-bold">CAM-DH-02</span>
+                                    <span id="cctvCamLocation" class="text-white font-sans font-bold">추암 촛대바위 해안초소 방면</span>
+                                </div>
+                                <div class="bg-black/65 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/15 text-slate-200 flex items-center gap-2">
+                                    <span id="cctvClockOsd">2026-11-20 19:46:00</span>
+                                    <span class="text-emerald-400 font-bold">HD 1080p</span>
+                                </div>
+                            </div>
+
+                            <!-- Center Crosshair Reticle -->
+                            <div class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-35">
+                                <div class="w-16 h-16 border border-white/40 rounded-full flex items-center justify-center">
+                                    <div class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div>
+                                </div>
+                            </div>
+
+                            <!-- Camera Angle Switcher (Sub-angles per spot) -->
+                            <div id="cctvAngleBtns" class="absolute top-14 left-3 flex flex-wrap gap-1.5">
+                                <!-- JS populated -->
+                            </div>
+
+                            <!-- Bottom OSD Status & Controls -->
+                            <div class="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+                                <div class="flex flex-wrap items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/15">
+                                    <span class="text-sky-300 font-bold"><i class="fas fa-compass mr-1"></i><span id="cctvBearingOsd">동북동 68° (해안 방면)</span></span>
+                                    <span class="text-slate-500">|</span>
+                                    <span id="cctvCrowdBadge" class="text-emerald-300 font-bold">혼잡도: 여유</span>
+                                    <span class="text-slate-500">|</span>
+                                    <span id="cctvWeatherOsd" class="text-slate-200">시정 양호 · 파고 0.8m</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="toggleCctvZoom()" class="bg-black/75 hover:bg-donghae-blue text-white px-2.5 py-1.5 rounded-lg border border-white/15 text-[11px] font-bold transition" title="화면 확대/원본">
+                                        <i class="fas fa-magnifying-glass-plus mr-1"></i><span id="cctvZoomLabel">1.0x</span>
+                                    </button>
+                                    <button onclick="openCctvPortalModal()" class="bg-donghae-blue/90 hover:bg-donghae-sky text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition">
+                                        <i class="fas fa-up-right-from-square mr-1"></i>공식 CCTV 포털 안내
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Telemetry & Field Status Panel (1 col) -->
+                    <div class="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-donghae-sky uppercase tracking-wider">Smart Field Telemetry</span>
+                                <span id="cctvStatusTag" class="text-[11px] font-bold bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full">정상 송출중</span>
+                            </div>
+                            <h4 id="cctvSpotTitle" class="text-lg font-extrabold text-white mt-1.5">추암 촛대바위 & 출렁다리</h4>
+                            <p id="cctvSpotAddr" class="text-xs text-slate-400 mt-0.5">강원특별자치도 동해시 촛대바위길 28</p>
+
+                            <div class="grid grid-cols-2 gap-2.5 mt-4">
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/60">
+                                    <div class="text-[11px] text-slate-400">현장 기상·해상</div>
+                                    <div id="cctvMetricWeather" class="text-sm font-bold text-sky-300 mt-0.5">맑음 · 파고 0.8m</div>
+                                </div>
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/60">
+                                    <div class="text-[11px] text-slate-400">탐방·주차 혼잡도</div>
+                                    <div id="cctvMetricCrowd" class="text-sm font-bold text-emerald-300 mt-0.5">여유 (주차 78%)</div>
+                                </div>
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/60">
+                                    <div class="text-[11px] text-slate-400">안전·개방 상태</div>
+                                    <div id="cctvMetricSafety" class="text-sm font-bold text-amber-300 mt-0.5">출렁다리 정상 개방</div>
+                                </div>
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/60">
+                                    <div class="text-[11px] text-slate-400">설치 지점</div>
+                                    <div id="cctvMetricMount" class="text-sm font-bold text-slate-200 mt-0.5">해안 전망데크 상단</div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 bg-slate-900/60 p-3.5 rounded-xl border border-slate-700/60">
+                                <div class="text-xs font-bold text-slate-200 mb-1"><i class="fas fa-circle-info text-donghae-sky mr-1.5"></i>관제 안내 메모</div>
+                                <p id="cctvFieldNote" class="text-xs text-slate-300 leading-relaxed">
+                                    동해시 재난안전상황실 및 국가교통정보센터(ITS)·해양수산부 연안 CCTV 연계를 통해 일출·너울성 파도 및 진입로 정체 여부를 사전 확인할 수 있습니다.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-700/80 flex items-center gap-2">
+                            <button onclick="focusCurrentCctvOnMap()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-2.5 rounded-xl text-xs font-bold transition">
+                                <i class="fas fa-map-pin text-donghae-sky mr-1"></i>지도 위치 이동
+                            </button>
+                            <button onclick="openCurrentCctvSpotDetail()" class="flex-1 bg-donghae-teal hover:bg-teal-500 text-slate-950 py-2.5 rounded-xl text-xs font-extrabold transition">
+                                <i class="fas fa-utensils mr-1"></i>주변 맛집·가이드
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4-Split Multi-Monitor Grid (Hidden by default) -->
+                <div id="cctvMultiView" class="hidden mt-6 grid sm:grid-cols-2 gap-4">
+                    <!-- JS populated 4-cam grid -->
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <!-- SECTION 4: NOTICES & ANNOUNCEMENTS (시정 소식 탭) -->
@@ -998,6 +1158,129 @@
             ]
         };
 
+
+        const spotCctvMap = {
+            1: {
+                camCode: "CAM-DH-01",
+                mount: "도째비골 스카이밸리 상부 전망탑",
+                weather: "맑음 · 해풍 3.2m/s",
+                crowd: "보통 (묵호주차장 62%)",
+                safety: "스카이워크·슬라이드 정상 운영",
+                note: "강풍(15m/s 이상) 또는 우천 시 자이언트 슬라이드 및 해랑전망대 출입이 일시 통제될 수 있으니 화면의 해상 파고와 기상을 확인하세요.",
+                angles: [
+                    { label: "카메라 1 · 스카이워크 전경", location: "도째비골 스카이밸리 하늘산책로", bearing: "북동 52° (해랑전망대 방면)", filter: "brightness-95 contrast-105" },
+                    { label: "카메라 2 · 묵호등대 진입로", location: "묵호진동 해안도로·주차장 방면", bearing: "남서 215° (진입도로 방면)", filter: "brightness-90 contrast-110 saturate-90" }
+                ]
+            },
+            2: {
+                camCode: "CAM-DH-02",
+                mount: "추암 해안초소·출렁다리 입구",
+                weather: "맑음 · 파고 0.8m",
+                crowd: "여유 (추암주차장 78%)",
+                safety: "출렁다리·촛대바위 정상 개방",
+                note: "일출 시간대 및 너울성 파도 특보 발효 시 해안 데크와 출렁다리 통행이 제한될 수 있습니다. 실시간 파도 상태를 확인하세요.",
+                angles: [
+                    { label: "카메라 1 · 촛대바위 & 출렁다리", location: "추암 촛대바위 해안 전망대", bearing: "동북동 68° (동해 바다 방면)", filter: "brightness-95 contrast-105" },
+                    { label: "카메라 2 · 추암해변 진입도로", location: "추암동 해안로 주차장 방면", bearing: "서북서 290° (북평 방면)", filter: "brightness-90 contrast-110 saturate-85" }
+                ]
+            },
+            3: {
+                camCode: "CAM-DH-03",
+                mount: "무릉계곡 관리사무소·무릉반석 입구",
+                weather: "쾌청 · 계곡기온 14℃",
+                crowd: "여유 (제1주차장 81%)",
+                safety: "베틀바위·두타산 탐방로 개방",
+                note: "호우주의보 또는 산불조심기간 입산 통제 여부를 탐방 전 미리 확인할 수 있습니다.",
+                angles: [
+                    { label: "카메라 1 · 무릉반석 계곡", location: "무릉계곡 무릉반석·삼화사 방면", bearing: "서남서 245° (두타산 방면)", filter: "brightness-95 contrast-105" },
+                    { label: "카메라 2 · 매표소·주차장 광장", location: "삼화로 무릉계곡 진입 광장", bearing: "동북동 75° (진입도로 방면)", filter: "brightness-90 contrast-110" }
+                ]
+            },
+            4: {
+                camCode: "CAM-DH-04",
+                mount: "망상해수욕장 중앙 망루·해안도로",
+                weather: "맑음 · 파고 0.7m",
+                crowd: "여유 (해변주차장 85%)",
+                safety: "백사장·오토캠핑장 정상 개방",
+                note: "망상해변 백사장 파고와 7번 국도(동해대로) 망상IC 인근 차량 흐름을 실시간으로 점검합니다.",
+                angles: [
+                    { label: "카메라 1 · 망상 백사장 해안", location: "망상해수욕장 중앙 백사장", bearing: "동북동 64° (해안선 방면)", filter: "brightness-95 contrast-105" },
+                    { label: "카메라 2 · 동해대로 망상교차로", location: "국도 7호선 망상해변 입구", bearing: "북북서 340° (옥계 방면)", filter: "brightness-90 contrast-115 saturate-85" }
+                ]
+            },
+            5: {
+                camCode: "CAM-DH-05",
+                mount: "논골담길 등대오름길 상단",
+                weather: "맑음 · 시정 20km",
+                crowd: "보통 (골목 탐방 원활)",
+                safety: "전 구간 보행 안전 양호",
+                note: "묵호항에서 묵호등대로 이어지는 가파른 골목길 보행 혼잡도 및 동절기 결빙 상태를 확인합니다.",
+                angles: [
+                    { label: "카메라 1 · 논골담길 전망 골목", location: "묵호진동 논골담길 벽화골목", bearing: "동남동 118° (묵호항 내려다봄)", filter: "brightness-95 contrast-105" }
+                ]
+            },
+            6: {
+                camCode: "CAM-DH-06",
+                mount: "무릉별유천지 청옥호 전망데크",
+                weather: "맑음 · 바람 2.5m/s",
+                crowd: "보통 (제1·2주차장 원활)",
+                safety: "스카이글라이더·루지 정상 운행",
+                note: "기상 악화(강풍·낙뢰) 시 스카이글라이더 및 알파인코스터 운행 중단 여부를 사전에 확인하실 수 있습니다.",
+                angles: [
+                    { label: "카메라 1 · 청옥호 & 라벤더정원", location: "무릉별유천지 청옥호 상부", bearing: "남동 135° (청옥호 전경)", filter: "brightness-95 contrast-105" }
+                ]
+            },
+            7: {
+                camCode: "CAM-DH-07",
+                mount: "천곡황금박쥐동굴 매표소·돌리네 입구",
+                weather: "실외 16℃ / 동굴내 13℃",
+                crowd: "여유 (공영주차장 74%)",
+                safety: "동굴 탐방·돌리네 산책로 개방",
+                note: "도심 천곡동 동굴로 50 일대 진입 차량 및 매표소 대기 현황을 확인할 수 있습니다.",
+                angles: [
+                    { label: "카메라 1 · 동굴 탐방로 구간", location: "천곡황금박쥐동굴 주요 관람로", bearing: "지하 탐방로 2구간", filter: "brightness-95 contrast-110" }
+                ]
+            },
+            8: {
+                camCode: "CAM-DH-08",
+                mount: "북평민속시장 오일장길 중앙 아케이드",
+                weather: "맑음 · 도심 17℃",
+                crowd: "활기참 (장날 주차안내 가동)",
+                safety: "보행자 안전관제 가동중",
+                note: "매월 끝자리 3·8일 5일장 개장 시 오일장길 혼잡도와 인근 공영주차장 여유 공간을 미리 확인하세요.",
+                angles: [
+                    { label: "카메라 1 · 북평민속시장 장터길", location: "북평동 오일장길 중앙 통로", bearing: "남남동 160° (장터 중심부)", filter: "brightness-95 contrast-105" }
+                ]
+            },
+            9: {
+                camCode: "CAM-DH-09",
+                mount: "어달해변 해안산책로·일출로 방면",
+                weather: "맑음 · 파고 0.6m",
+                crowd: "여유 (해안도로 소통 원활)",
+                safety: "해안 산책로·방파제 안전 양호",
+                note: "어달항과 어달해변 해안산책로의 파도 높이와 일출로 카페거리 주차 여건을 확인할 수 있습니다.",
+                angles: [
+                    { label: "카메라 1 · 어달해변 해안산책로", location: "어달동 일출로 297 해안 방면", bearing: "동북동 70° (어달 해안선)", filter: "brightness-95 contrast-105" }
+                ]
+            },
+            10: {
+                camCode: "CAM-DH-10",
+                mount: "묵호항 여객선터미널·어판장 방파제",
+                weather: "맑음 · 파고 0.8m",
+                crowd: "보통 (수산시장 주변 원활)",
+                safety: "항내 선박 입출항 정상",
+                note: "묵호항 어판장 주변 교통 흐름과 울릉도 여객선터미널 일대 기상·해상 시정을 실시간으로 보여줍니다.",
+                angles: [
+                    { label: "카메라 1 · 묵호항 어선부두 전경", location: "묵호진동 해안로 285 묵호항", bearing: "동남동 110° (묵호항 내항)", filter: "brightness-95 contrast-105" }
+                ]
+            }
+        };
+
+        let currentCctvSpotId = 2; // Default: 추암 촛대바위
+        let currentCctvAngleIdx = 0;
+        let isCctvMultiView = false;
+        let isCctvZoomed = false;
+
         // --- MAP STATE ---
         let tourMap = null;
         let markersLayer = null;
@@ -1009,6 +1292,7 @@
             startClock();
             initTourMap();
             renderTourSpots('all');
+            initCctvViewer();
             switchNoticeTab('news');
             updateBusInfo();
         };
@@ -1046,9 +1330,14 @@
                         <div style="font-size:11px;font-weight:700;color:#005bac;margin-bottom:2px;">${spot.tag}</div>
                         <div style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:4px;">${spot.name}</div>
                         <div style="font-size:11px;color:#475569;margin-bottom:8px;">📍 ${spot.address}</div>
-                        <button onclick="openSpotModal('${spot.name}')" style="width:100%;background:#005bac;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;">
-                            상세 가이드 보기
-                        </button>
+                        <div style="display:flex;gap:6px;">
+                            <button onclick="openSpotCctv(${spot.id})" style="flex:1;background:#0f172a;color:#fff;border:none;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;cursor:pointer;">
+                                🔴 주변 CCTV
+                            </button>
+                            <button onclick="openSpotModal('${spot.name}')" style="flex:1;background:#005bac;color:#fff;border:none;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;cursor:pointer;">
+                                상세 가이드
+                            </button>
+                        </div>
                     </div>
                 `);
                 markerById[spot.id] = marker;
@@ -1106,6 +1395,13 @@
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('ko-KR', { hour12: false });
                 document.getElementById('currentTimeDisplay').innerHTML = `<i class="far fa-clock"></i> ${timeStr}`;
+                const cctvOsd = document.getElementById('cctvClockOsd');
+                if (cctvOsd) {
+                    const yyyy = now.getFullYear();
+                    const mm = String(now.getMonth() + 1).padStart(2, '0');
+                    const dd = String(now.getDate()).padStart(2, '0');
+                    cctvOsd.textContent = `${yyyy}-${mm}-${dd} ${timeStr}`;
+                }
             };
             updateTime();
             setInterval(updateTime, 1000);
@@ -1167,12 +1463,15 @@
                         <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">
                             <i class="fas fa-clock text-[10px]"></i> ${spot.status}
                         </span>
-                        <div class="flex items-center gap-2">
-                            <button onclick="focusSpotOnMap(${spot.id})" class="text-xs bg-sky-50 hover:bg-sky-100 text-donghae-blue px-2.5 py-1 rounded-lg font-bold transition">
-                                <i class="fas fa-map-pin text-[10px] mr-0.5"></i> 지도 위치
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="openSpotCctv(${spot.id})" class="text-xs bg-slate-900 hover:bg-rose-600 text-white px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1" title="주변 실시간 CCTV 보기">
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> CCTV
                             </button>
-                            <button onclick="openSpotModal('${spot.name}')" class="text-xs text-donghae-blue font-bold hover:underline">
-                                상세보기 <i class="fas fa-arrow-right text-[10px]"></i>
+                            <button onclick="focusSpotOnMap(${spot.id})" class="text-xs bg-sky-50 hover:bg-sky-100 text-donghae-blue px-2.5 py-1 rounded-lg font-bold transition">
+                                <i class="fas fa-map-pin text-[10px] mr-0.5"></i> 지도
+                            </button>
+                            <button onclick="openSpotModal('${spot.name}')" class="text-xs text-donghae-blue font-bold hover:underline ml-0.5">
+                                상세 <i class="fas fa-arrow-right text-[10px]"></i>
                             </button>
                         </div>
                     </div>
@@ -1295,11 +1594,207 @@
                 openSpotModal('묵호항');
                 return;
             }
+            if (val.toLowerCase().includes('cctv') || val.includes('실시간') || val.includes('파도')) {
+                openSpotCctv(2);
+                return;
+            }
             openServiceModal(`'${val}' 검색 결과`);
         }
         function setSearch(tag) {
             document.getElementById('heroSearchInput').value = tag;
             handleHeroSearch();
+        }
+
+
+        // --- 2-1. TOURISM LIVE CCTV SYSTEM ---
+        function initCctvViewer() {
+            renderCctvSelector();
+            selectCctvSpot(currentCctvSpotId, 0, false);
+        }
+
+        function renderCctvSelector() {
+            const container = document.getElementById('cctvSpotSelector');
+            if (!container) return;
+            container.innerHTML = '';
+
+            tourSpots.forEach(spot => {
+                const isSelected = spot.id === currentCctvSpotId;
+                const btn = document.createElement('button');
+                btn.className = isSelected
+                    ? "px-3.5 py-1.5 rounded-full text-xs font-bold bg-donghae-sky text-slate-950 shadow-md transition flex items-center gap-1.5"
+                    : "px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition flex items-center gap-1.5";
+                btn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-rose-600' : 'bg-emerald-400'}"></span>${spot.name}`;
+                btn.onclick = () => selectCctvSpot(spot.id, 0, false);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectCctvSpot(spotId, angleIdx = 0, shouldScroll = false) {
+            const spot = tourSpots.find(s => s.id === spotId);
+            const meta = spotCctvMap[spotId];
+            if (!spot || !meta) return;
+
+            currentCctvSpotId = spotId;
+            currentCctvAngleIdx = angleIdx;
+
+            if (isCctvMultiView) {
+                toggleCctvMultiView();
+            }
+
+            renderCctvSelector();
+
+            const angle = meta.angles[angleIdx] || meta.angles[0];
+            const imgEl = document.getElementById('cctvFeedImg');
+            if (imgEl) {
+                imgEl.style.opacity = '0.35';
+                setTimeout(() => {
+                    imgEl.src = spot.img;
+                    imgEl.alt = `${spot.name} 실시간 CCTV 화면`;
+                    imgEl.className = `w-full h-full object-cover transition-all duration-700 ${angle.filter || 'brightness-95 contrast-105'} ${isCctvZoomed ? 'scale-125' : 'scale-100'}`;
+                    imgEl.style.opacity = '1';
+                }, 150);
+            }
+
+            document.getElementById('cctvCamCode').textContent = `${meta.camCode}-${angleIdx + 1}`;
+            document.getElementById('cctvCamLocation').textContent = angle.location;
+            document.getElementById('cctvBearingOsd').textContent = angle.bearing;
+            document.getElementById('cctvCrowdBadge').textContent = `혼잡도: ${meta.crowd.split(' ')[0]}`;
+            document.getElementById('cctvWeatherOsd').textContent = meta.weather;
+
+            document.getElementById('cctvSpotTitle').textContent = spot.name;
+            document.getElementById('cctvSpotAddr').textContent = spot.address;
+            document.getElementById('cctvMetricWeather').textContent = meta.weather;
+            document.getElementById('cctvMetricCrowd').textContent = meta.crowd;
+            document.getElementById('cctvMetricSafety').textContent = meta.safety;
+            document.getElementById('cctvMetricMount').textContent = meta.mount;
+            document.getElementById('cctvFieldNote').textContent = meta.note;
+
+            // Render sub-angle buttons
+            const angleContainer = document.getElementById('cctvAngleBtns');
+            if (angleContainer) {
+                angleContainer.innerHTML = '';
+                meta.angles.forEach((ang, idx) => {
+                    const abtn = document.createElement('button');
+                    abtn.className = idx === angleIdx
+                        ? "bg-donghae-blue text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-sky-300/40 shadow"
+                        : "bg-black/65 hover:bg-black/85 text-slate-200 text-[11px] font-medium px-2.5 py-1 rounded-lg border border-white/15";
+                    abtn.textContent = ang.label;
+                    abtn.onclick = () => selectCctvSpot(spotId, idx, false);
+                    angleContainer.appendChild(abtn);
+                });
+            }
+
+            if (shouldScroll) {
+                const sec = document.getElementById('cctvSection');
+                if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function openSpotCctv(spotId) {
+            selectCctvSpot(spotId, 0, true);
+        }
+
+        function toggleCctvZoom() {
+            isCctvZoomed = !isCctvZoomed;
+            const imgEl = document.getElementById('cctvFeedImg');
+            const labelEl = document.getElementById('cctvZoomLabel');
+            if (imgEl) {
+                imgEl.classList.toggle('scale-125', isCctvZoomed);
+                imgEl.classList.toggle('scale-100', !isCctvZoomed);
+            }
+            if (labelEl) {
+                labelEl.textContent = isCctvZoomed ? '1.25x' : '1.0x';
+            }
+        }
+
+        function refreshCctvFeed() {
+            const imgEl = document.getElementById('cctvFeedImg');
+            if (imgEl) {
+                imgEl.style.opacity = '0.25';
+                setTimeout(() => {
+                    imgEl.style.opacity = '1';
+                }, 220);
+            }
+            showToast("주요 관광지 CCTV 영상 스트림을 최신 프레임으로 갱신했습니다.");
+        }
+
+        function toggleCctvMultiView() {
+            isCctvMultiView = !isCctvMultiView;
+            const singleEl = document.getElementById('cctvSingleView');
+            const multiEl = document.getElementById('cctvMultiView');
+            const btnEl = document.getElementById('cctvGridToggleBtn');
+
+            if (isCctvMultiView) {
+                singleEl.classList.add('hidden');
+                multiEl.classList.remove('hidden');
+                btnEl.innerHTML = `<i class="fas fa-tv text-donghae-sky"></i><span>단일 화면 크게 보기</span>`;
+
+                // Show 4 flagship spots: 추암(2), 도째비골(1), 망상(4), 무릉계곡(3)
+                const quadIds = [2, 1, 4, 3];
+                multiEl.innerHTML = '';
+                quadIds.forEach(id => {
+                    const spot = tourSpots.find(s => s.id === id);
+                    const meta = spotCctvMap[id];
+                    const card = document.createElement('div');
+                    card.className = "relative rounded-2xl overflow-hidden bg-black border border-slate-700 aspect-video cursor-pointer group";
+                    card.onclick = () => selectCctvSpot(id, 0, false);
+                    card.innerHTML = `
+                        <img src="${spot.img}" alt="${spot.name} CCTV" class="w-full h-full object-cover brightness-95 contrast-105 group-hover:scale-105 transition duration-500">
+                        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/60"></div>
+                        <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between text-[10px] font-mono">
+                            <span class="bg-black/70 px-2 py-1 rounded text-white font-bold flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                ${meta.camCode} · ${spot.name}
+                            </span>
+                            <span class="bg-black/70 px-2 py-1 rounded text-emerald-300 font-bold">LIVE</span>
+                        </div>
+                        <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px]">
+                            <span class="text-slate-200 font-medium">${meta.weather} · ${meta.crowd.split(' ')[0]}</span>
+                            <span class="bg-donghae-blue text-white px-2 py-0.5 rounded font-bold text-[10px]">확대 관제 →</span>
+                        </div>
+                    `;
+                    multiEl.appendChild(card);
+                });
+            } else {
+                multiEl.classList.add('hidden');
+                singleEl.classList.remove('hidden');
+                btnEl.innerHTML = `<i class="fas fa-table-cells-large text-donghae-sky"></i><span>4분할 동시 모니터링</span>`;
+            }
+        }
+
+        function focusCurrentCctvOnMap() {
+            focusSpotOnMap(currentCctvSpotId);
+        }
+
+        function openCurrentCctvSpotDetail() {
+            const spot = tourSpots.find(s => s.id === currentCctvSpotId);
+            if (spot) openSpotModal(spot.name);
+        }
+
+        function openCctvPortalModal() {
+            const spot = tourSpots.find(s => s.id === currentCctvSpotId);
+            const meta = spotCctvMap[currentCctvSpotId];
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center text-xl">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-lg text-slate-900">동해시 공공 CCTV 실시간 연계 안내</h3>
+                        <p class="text-[11px] text-slate-500">선택 지점: ${spot ? spot.name : ''} (${meta ? meta.camCode : ''})</p>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                    실제 라이브 영상 스트림(HLS/RTSP)을 홈페이지에 직접 송출하려면 아래 공공 오픈API 또는 공식 포털 URL을 연동할 수 있습니다.
+                </p>
+                <div class="space-y-2 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-slate-700">
+                    <div><strong>1. 국가교통정보센터 (ITS) Open API:</strong> 동해대로(7번 국도)·망상IC·묵호·북평 주요 교차로 CCTV 스트리밍 URL 제공</div>
+                    <div><strong>2. 강원특별자치도 / 동해시 재난안전대책본부:</strong> 해안가(추암·망상·어달·묵호항) 너울성 파도 및 재난 감시 CCTV 연계</div>
+                    <div><strong>3. 국립공원공단 / 무릉계곡 관리사무소:</strong> 탐방로 기상·입산 통제 현장 영상 안내</div>
+                </div>
+            `;
+            document.getElementById('generalModal').classList.remove('hidden');
         }
 
         // --- 3. MODAL & DIALOG SYSTEM ---
@@ -1348,11 +1843,16 @@
                 <div class="rounded-2xl overflow-hidden h-40 mb-3 bg-slate-100">
                     <img src="${spot.img}" alt="${spot.name}" class="w-full h-full object-cover">
                 </div>
-                <div class="flex items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
                     <h3 class="font-extrabold text-xl text-slate-900">${spot.name}</h3>
-                    <button onclick="closeModal(); focusSpotOnMap(${spot.id});" class="bg-donghae-blue text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-donghae-deep transition shrink-0">
-                        <i class="fas fa-map-location-dot mr-1"></i> 지도에서 보기
-                    </button>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="closeModal(); openSpotCctv(${spot.id});" class="bg-slate-900 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-600 transition">
+                            <i class="fas fa-video text-rose-400 mr-1"></i> 주변 CCTV
+                        </button>
+                        <button onclick="closeModal(); focusSpotOnMap(${spot.id});" class="bg-donghae-blue text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-donghae-deep transition">
+                            <i class="fas fa-map-location-dot mr-1"></i> 지도 보기
+                        </button>
+                    </div>
                 </div>
                 <span class="inline-block bg-donghae-sky/10 text-donghae-blue text-xs font-bold px-2.5 py-0.5 rounded-full my-2">${spot.tag}</span>
                 <p class="text-xs text-slate-600 leading-relaxed mb-3">${spot.desc}</p>
@@ -1440,6 +1940,8 @@
                     reply = "⚓ <b>묵호항 맛집·카페</b>: 오뚜기칼국수, 거동탕수육, 항구 수산물 식당가와 함께 카라멜스테이션, 라운드어바웃, 아폰트 커피, 도야하우스 등 개성 있는 카페가 가깝습니다.";
                 } else if (text.includes("맛집") || text.includes("카페")) {
                     reply = "🍽️☕ <b>동해 대표 맛집·카페 요약</b>: 묵호·어달·도째비골 권역은 오뚜기칼국수, 거동탕수육, 카페 한결, 카페 코스타, 카라멜스테이션, 망상 권역은 베이커리카페 글렘·현상소, 북평민속시장은 동남식당·더좋은수산·칼국수 골목이 인기입니다.";
+                } else if (text.toLowerCase().includes("cctv") || text.includes("실시간") || text.includes("파고")) {
+                    reply = "📹 <b>주요 관광지 실시간 CCTV 안내</b>: 페이지 내 '관광지CCTV' 섹션에서 추암 촛대바위, 도째비골 스카이밸리, 망상해수욕장, 무릉계곡, 묵호항, 어달해변 등 10개 명소 주변 현장 화면과 파고·혼잡도를 바로 확인하실 수 있습니다.";
                 } else if (text.includes("동해페이")) {
                     reply = "💳 <b>동해페이 카드 안내</b>: '동해페이' 전용 앱에서 발급 신청 가능하며, 월 30만원 한도 내 6%~10% 캐시백 혜택이 제공됩니다.";
                 }
